@@ -68,6 +68,8 @@ export default function FormikForm() {
                     <div className="input-row">
                         <button type="submit" disabled={isSubmitting}>Submit</button>
                     </div>
+                    <pre> {JSON.stringify(values, null, 2)}</pre>
+		<pre> {JSON.stringify(errors, null, 2)}</pre>
                 </Form>
             )}
             </Formik>

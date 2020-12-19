@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Formik,
     Field,
     Form
   } from "formik";
 import * as Yup from 'yup';
+import axios from './axios';
 import { TextFormField } from './TextFormField';
+import { SelectFormField } from './SelectFormField';
 
 const ValidationSchema = Yup.object().shape({
 
@@ -20,6 +22,19 @@ const ValidationSchema = Yup.object().shape({
 
 export default function FormikForm() {
     
+    async function postUser (formValues) {
+        const response = await axios
+        .post('users', {
+            method: 'post',
+            data: {}
+        })
+        .catch((err) => console.log(err));
+            
+        console.log(response)
+        
+    }
+        
+
     return (
         <Formik
             initialValues={{
@@ -30,10 +45,11 @@ export default function FormikForm() {
             validationSchema={ValidationSchema}
             onSubmit={(data, { setSubmitting }) => {
                 setSubmitting(true);
-                //async call
+                postUser(data.values)
                 setSubmitting(false)
+                
             }}>
-            {({ values, isSubmitting}) => (
+            {({ values, errors, isSubmitting}) => (
                 <Form>
                     <h2>The Formik Form with yup</h2>
                     <div className="input-row">
@@ -53,6 +69,8 @@ export default function FormikForm() {
                     <div className="input-row">
                         <button type="submit" disabled={isSubmitting}>Submit</button>
                     </div>
+                    <pre> {JSON.stringify(values, null, 2)}</pre>
+		            <pre> {JSON.stringify(errors, null, 2)}</pre>
                 </Form>
             )}
             </Formik>
