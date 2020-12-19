@@ -4,9 +4,12 @@ import {
     Field,
     Form
   } from "formik";
+import Autosuggest from 'react-autosuggest';
 import * as Yup from 'yup';
 import { TextFormField } from './TextFormField';
 import { SelectFormField } from './SelectFormField';
+
+import Error from './Error';
 
 const ValidationSchema = Yup.object().shape({
 
@@ -25,7 +28,9 @@ const ValidationSchema = Yup.object().shape({
 });
 
 export default function FormikForm() {
-    
+    const  [ country, setCountry ] = useState("");
+    const [ suggestions, setSuggestions ] = useState([]);
+
     return (
         <Formik
             initialValues={{
@@ -35,16 +40,32 @@ export default function FormikForm() {
                 
             }}
             validationSchema={ValidationSchema}
-            onSubmit={(data, { setSubmitting }) => {
+            onSubmit={(values, {setSubmitting, resetForm }) => {
                 setSubmitting(true);
-                //async call
-                setSubmitting(false)
-            }}>
-            {({ values, isSubmitting}) => (
-                <Form>
+
+                setTimeout(() => {
+                    alert(JSON.stringify(values, null, 2));
+                    resetForm();
+                    setSubmitting(false);
+                }, 500);
+            }}
+            >
+            {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
+                <form onSubmit={handleSubmit}>
                     <h2>The Formik Form with yup</h2>
                     <div className="input-row">
-                        <Field label="Name" name="name" component={TextFormField}/>
+                        <label htmlFor="name">Name</label>
+                        <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            placeholder="Enter your name"
+                            onChange={handleChange} 
+                            onBlur={handleBlur}
+                            value={values.name}
+                            className={touched.name && errors.name ? "has-error" : null} // if field has been touched applys has-error class
+                        />
+                        <Error touched={touched.name} message={errors.name} />
                     </div>
                     <div className="input-row">
                         <label htmlFor="email">Email</label>
@@ -53,6 +74,7 @@ export default function FormikForm() {
                             id="email"
                             component={TextFormField}
                         />
+                        <Error touched={touched.email} message={errors.email} />
                     </div>
                     <div>
                     <Field
