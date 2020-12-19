@@ -24,7 +24,6 @@ const ValidationSchema = Yup.object().shape({
 });
 
 export default function FormikForm() {
-    const []
     
     return (
         <Formik
