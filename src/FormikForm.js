@@ -4,9 +4,18 @@ import * as Yup from 'yup';
 
 const ValidationSchema = Yup.object().shape({
 
-    name: Yup.string().min(1, "Too Short of Name!").max(255, "Too Long of Name!").required("Names is Required"),
-    country: Yup.string().min(1, "Too Short of country!").max(255, "Too Long of Country").required("Country is Required"),
-    email: Yup.string().email("Must be an email address").max(255, "Too Long of email").required("Email is required")
+    name: Yup.string()
+    .min(1, "Too Short of Name!")
+    .max(255, "Too Long of Name!")
+    .required("Names is Required"),
+    country: Yup.string()
+    .min(1, "Too Short of country!")
+    .max(255, "Too Long of Country")
+    .required("Country is Required"),
+    email: Yup.string()
+    .email("Must be an email address")
+    .max(255, "Too Long of email")
+    .required("Email is required")
 });
 
 export default function FormikForm() {
