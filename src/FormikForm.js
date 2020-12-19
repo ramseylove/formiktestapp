@@ -6,6 +6,7 @@ import {
   } from "formik";
 import * as Yup from 'yup';
 import { TextFormField } from './TextFormField';
+import { SelectFormField } from './SelectFormField';
 
 const ValidationSchema = Yup.object().shape({
 
