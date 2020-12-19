@@ -1,11 +1,16 @@
 import React from 'react';
-import { Formik } from 'formik';
+import {
+    Formik,
+    Field,
+    Form
+  } from "formik";
 import * as Yup from 'yup';
+import { TextFormField } from './TextFormField';
 
 const ValidationSchema = Yup.object().shape({
 
     name: Yup.string()
-    .min(1, "Too Short of Name!")
+    .min(3, "Too Short of Name!")
     .max(255, "Too Long of Name!")
     .required("Names is Required"),
     country: Yup.string()
@@ -19,6 +24,7 @@ const ValidationSchema = Yup.object().shape({
 });
 
 export default function FormikForm() {
+    const []
     
     return (
         <Formik
@@ -26,41 +32,43 @@ export default function FormikForm() {
                 name: "",
                 email: "",
                 country: "",
-                postalCode: ""
+                
             }}
             validationSchema={ValidationSchema}
-            >
-            {({ values, errors, touched, handleChange, handleBlur }) => (
-                <form>
+            onSubmit={(data, { setSubmitting }) => {
+                setSubmitting(true);
+                //async call
+                setSubmitting(false)
+            }}>
+            {({ values, isSubmitting}) => (
+                <Form>
                     <h2>The Formik Form with yup</h2>
                     <div className="input-row">
-                        <label htmlFor="name">Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            id="name"
-                            placeholder="Enter your name"
-                            onChange={handleChange} 
-                            onBlur={handleBlur}
-                            value={values.name}
-                        />
+                        <Field label="Name" name="name" component={TextFormField}/>
                     </div>
                     <div className="input-row">
                         <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
+                        <Field
                             name="email"
                             id="email"
-                            placeholder="Enter your email"
-                            onChange={handleChange} 
-                            onBlur={handleBlur}
-                            value={values.email}
+                            component={TextFormField}
                         />
                     </div>
-                    <div className="input-row">
-                        <button type="submit">Submit</button>
+                    <div>
+                    <Field
+                        options={[
+                    { label: "Dog", value: "dog" },
+                    { label: "Cat", value: "cat" }
+                        ]}
+                        label="Pet"
+                        name="pet"
+                        component={SelectFormField}
+                />
                     </div>
-                </form>
+                    <div className="input-row">
+                        <button type="submit" disabled={isSubmitting}>Submit</button>
+                    </div>
+                </Form>
             )}
             </Formik>
     )
