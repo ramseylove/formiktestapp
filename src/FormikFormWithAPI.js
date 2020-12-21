@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Formik,
     Field,
     Form
   } from "formik";
+import {
+    List,
+    ListItem,
+    ListItemText
+} from '@material-ui/core';
 import * as Yup from 'yup';
-import axios from './axios';
+import request from './axios';
 import { TextFormField } from './TextFormField';
 import { SelectFormField } from './SelectFormField';
 
 const ValidationSchema = Yup.object().shape({
-
     name: Yup.string()
     .min(3, "Too Short of Name!")
     .max(255, "Too Long of Name!")
@@ -20,22 +24,25 @@ const ValidationSchema = Yup.object().shape({
 
 });
 
+
 export default function FormikForm() {
+    const [ person, setPerson ] = useState([]);
+    
+    const addPerson = (person) => {
+        setPerson((people) => [person, ...people])
+    }
     
     async function postUser (formValues) {
-        const response = await axios
-        .post('users', {
-            method: 'post',
-            data: {}
-        })
+        const response = await request
+        .post('/users', {formValues})
         .catch((err) => console.log(err));
-            
-        console.log(response)
-        
+        addPerson(response.data)
+        console.log(person)
     }
-        
+    
 
     return (
+        <div>
         <Formik
             initialValues={{
                 name: "",
@@ -45,8 +52,8 @@ export default function FormikForm() {
             validationSchema={ValidationSchema}
             onSubmit={(data, { setSubmitting }) => {
                 setSubmitting(true);
-                postUser(data.values)
-                setSubmitting(false)
+                postUser(data)
+                setSubmitting(false);
                 
             }}>
             {({ values, errors, isSubmitting}) => (
@@ -73,6 +80,17 @@ export default function FormikForm() {
 		            <pre> {JSON.stringify(errors, null, 2)}</pre>
                 </Form>
             )}
+           
             </Formik>
+             <div>
+             <List>
+                 {person.map(peep => (
+                     <ListItem key={peep.id}>
+                     <ListItemText primary={peep.formValues.name} secondary={peep.createdAt} /> 
+                     </ListItem>
+                 ))}
+             </List>
+         </div>
+         </div>
     )
 }

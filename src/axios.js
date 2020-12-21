@@ -1,9 +1,9 @@
-import axios from 'axios';
+import Axios from 'axios';
 
-const Axios = axios.create({
-    baseUrl: 'https://reqres.in/api/',
+const request = Axios.create({
+    baseURL: 'https://reqres.in/api',
     timeout: 1000,
 
 })
 
-export default Axios;
+export default request;
